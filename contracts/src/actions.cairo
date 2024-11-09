@@ -5,6 +5,8 @@ use starknet::ContractAddress;
 trait IActions<T> {
     fn create_session(ref self: T, player1: ContractAddress, player2: ContractAddress, secret: u32) -> u32;
     fn guess(ref self: T, session_id: u32, value: u32);
+    fn get_secret(self: @T, session_id: u32) -> u32;
+    fn get_game_winner(self: @T, session_id: u32) -> u8;
 }
 
 // dojo decorator
@@ -34,6 +36,12 @@ pub mod actions {
             id
         }
 
+        fn get_secret(self: @ContractState, session_id: u32) -> u32 {
+            let mut world = self.world(@"game");
+            let session: Session = world.read_model(session_id);
+            session.secret
+        }
+
         // Implementation of the move function for the ContractState struct.
         fn guess(ref self: ContractState, session_id: u32, value: u32) {
             let mut world = self.world(@"game");
@@ -42,16 +50,26 @@ pub mod actions {
             let mut session: Session = world.read_model(session_id);
             assert!(session.player1 == player || session.player2 == player, "Player is not in this session");
             let mut guess: Guess = world.read_model((player, session_id));
-            assert!(guess.guess == 0, "Player has already guessed");
+            assert!(session.winner == 0, "Game is already over");
 
-            let player_id = if session.player1 == player { 1 } else { 2 };
-            if session.secret == value {
-                session.winner = player_id;
+            if session.player1 == player && session.secret == value {
+                session.winner = 1;
+            }
+            else if session.player2 == player && session.secret == value {
+                session.winner = 2;
             }
 
             guess.guess = value;
             world.write_model(@guess);
+            world.write_model(@session);
+        }
+
+        fn get_game_winner(self: @ContractState, session_id: u32) -> u8 {
+            let mut world = self.world(@"game");
+            let session: Session = world.read_model(session_id);
+            session.winner
         }
     }
+
 
 }

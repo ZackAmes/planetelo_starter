@@ -18,7 +18,7 @@ mod planetelo {
                                                     IPlanetaryActions,IPlanetaryActionsDispatcher, IPlanetaryActionsDispatcherTrait};
     use game::actions::{IActions, IActionsDispatcher, IActionsDispatcherTrait};
 
-   // use game::lib::dice::{Dice, DiceTrait, DiceImpl};
+    use game::dice::{Dice, DiceTrait, DiceImpl};
     use game::models::{Session, Guess};
 
     use starknet::{ContractAddress, get_caller_address};
@@ -26,10 +26,16 @@ mod planetelo {
 
     use dojo::model::{ModelStorage, ModelValueStorage, Model};
 
+    fn dojo_init(self: @ContractState) {
+        let planetary: WorldStorage = PlanetaryTrait::new();
+        let (contract_address, _) = planetary.dns(@"planetary_actions").unwrap();
+        let planetary_actions = IPlanetaryActionsDispatcher {contract_address};
+        planetary_actions.register('demo', self.world(@"demo").dispatcher.contract_address);
+    }
+
     #[abi(embed_v0)]
     impl PlaneteloImpl of IPlanetelo<ContractState> {
         fn register(ref self: ContractState) {
-            let caller = get_caller_address();
 
             let planetary: WorldStorage = PlanetaryTrait::new();
             let (contract_address, _) = planetary.dns(@"planetary_actions").unwrap();
@@ -54,18 +60,11 @@ mod planetelo {
             let mut game = self.world(@"game");
             let (contract_address, _) = game.dns(@"actions").unwrap();
             let dispatcher = IActionsDispatcher {contract_address};
+            let mut dice = DiceTrait::new(100, 'SEED');
 
-            let maybe_secret = playlist_id.try_into();
-            match maybe_secret {
-                Option::Some(secret) => {
-                    let id: u128 = dispatcher.create_session(p1, p2, secret).into();
-                    id
-                },
-                Option::None => {
-                    panic!("Secret is too large");
-                    0
-                }
-            }
+            let secret = dice.roll();
+            let id: u128 = dispatcher.create_session(p1, p2, secret).into();
+            id
 
         }
 

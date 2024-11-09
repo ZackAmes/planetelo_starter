@@ -1122,7 +1122,7 @@
   "contracts": [
     {
       "address": "0xefa802bd265b9e271aab9faab3e41cbec945badcb14120cfdd79659bd682ce",
-      "class_hash": "0x60b2c669a0f6e5a6ccc21948a1765633e5817caaf0d4b745dbc24ac89809764",
+      "class_hash": "0x25e4585d53911baec2bb6413e3bd1712a980eb13d5de9afc66ff42d670e3ad",
       "abi": [
         {
           "type": "impl",
@@ -1212,6 +1212,38 @@
               ],
               "outputs": [],
               "state_mutability": "external"
+            },
+            {
+              "type": "function",
+              "name": "get_secret",
+              "inputs": [
+                {
+                  "name": "session_id",
+                  "type": "core::integer::u32"
+                }
+              ],
+              "outputs": [
+                {
+                  "type": "core::integer::u32"
+                }
+              ],
+              "state_mutability": "view"
+            },
+            {
+              "type": "function",
+              "name": "get_game_winner",
+              "inputs": [
+                {
+                  "name": "session_id",
+                  "type": "core::integer::u32"
+                }
+              ],
+              "outputs": [
+                {
+                  "type": "core::integer::u8"
+                }
+              ],
+              "state_mutability": "view"
             }
           ]
         },
@@ -1335,8 +1367,8 @@
       "systems": []
     },
     {
-      "address": "0x1560775b31f333eca97c536678362d6ea65bb7ea47eef0c7f14f0e190576cd3",
-      "class_hash": "0x5325a323b4743914ca52e80aa36ba91e537c3ba8bfefe45ff05ac5c909c7bf1",
+      "address": "0x653efb7d32cdcaf65ed4a6fd89378dd4e21bd60f6c2bb9fe455e1e8db6b6650",
+      "class_hash": "0x150464126ca4a9e038842fd99821c24c017cfa9a2679ba581f8b0cc34e4f2e3",
       "abi": [
         {
           "type": "impl",
@@ -1377,6 +1409,13 @@
               "state_mutability": "view"
             }
           ]
+        },
+        {
+          "type": "function",
+          "name": "dojo_init",
+          "inputs": [],
+          "outputs": [],
+          "state_mutability": "view"
         },
         {
           "type": "impl",
@@ -1479,13 +1518,6 @@
               "state_mutability": "external"
             }
           ]
-        },
-        {
-          "type": "function",
-          "name": "dojo_init",
-          "inputs": [],
-          "outputs": [],
-          "state_mutability": "view"
         },
         {
           "type": "impl",
@@ -1596,7 +1628,7 @@
         }
       ],
       "init_calldata": [],
-      "tag": "game-planetelo",
+      "tag": "planetelo-planetelo",
       "systems": []
     }
   ],

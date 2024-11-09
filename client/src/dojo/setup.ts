@@ -13,6 +13,7 @@ import { connect } from "./controller";
 import manifest from "./manifest_sepolia.json";
 import { Contract } from "starknet";
 import { type Abi } from "starknet";
+
 export type SetupResult = Awaited<ReturnType<typeof setup>>;
 
 export async function setup({ ...config }: DojoConfig) {
@@ -25,6 +26,7 @@ export async function setup({ ...config }: DojoConfig) {
         worldAddress: config.manifest.world.address || "",
     });
 
+    let actions_abi = config.manifest.contracts[0];
     // create contract components
     const contractComponents = defineContractComponents(world);
 
@@ -36,9 +38,9 @@ export async function setup({ ...config }: DojoConfig) {
     const dojoProvider = new DojoProvider(config.manifest, config.rpcUrl);
 
     const planetelo = new Contract(manifest.contracts[0].abi, manifest.contracts[0].address, dojoProvider.provider).typedv2(manifest.contracts[0].abi as Abi);
-    const actions = new Contract(config.manifest.contracts[1].abi, config.manifest.contracts[1].address, dojoProvider.provider).typedv2(config.manifest.contracts[1].abi as Abi);
-    console.log(actions);
-    console.log((await actions.get_name()).toString(16));
+    const actions = new Contract(actions_abi.abi, actions_abi.address, dojoProvider.provider).typedv2(actions_abi.abi as Abi);
+    
+    console.log(actions)
     const sync = await getSyncEntities(
         toriiClient,
         contractComponents as any,
@@ -66,6 +68,7 @@ export async function setup({ ...config }: DojoConfig) {
             toriiClient.publishMessage(typedData, signature);
         },
         planetelo,
+        actions,
         config,
         dojoProvider,
         toriiClient,
