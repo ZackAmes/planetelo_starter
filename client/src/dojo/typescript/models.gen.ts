@@ -7,12 +7,6 @@ export type ContractComponents = Awaited<
     ReturnType<typeof defineContractComponents>
 >;
 
-
-export const DirectionDefinition = {
-    type: RecsType.String,
-    value: RecsType.String,
-};
-
 // Type definition for `dojo::model::layout::Layout` enum
 export type Layout =
     | { type: "Fixed"; value: RecsType.NumberArray }

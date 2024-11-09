@@ -9,6 +9,7 @@ import { Account } from "starknet";
 import type { ArraySignatureType } from "starknet";
 import { BurnerManager } from "@dojoengine/create-burner";
 import { getSyncEntities, getSyncEvents } from "@dojoengine/state";
+import { connect } from "./controller";
 
 export type SetupResult = Awaited<ReturnType<typeof setup>>;
 
@@ -46,30 +47,7 @@ export async function setup({ ...config }: DojoConfig) {
 
     // setup world
     const client = await setupWorld(dojoProvider);
-
-    // create burner manager
-    const burnerManager = new BurnerManager({
-        masterAccount: new Account(
-            {
-                nodeUrl: config.rpcUrl,
-            },
-            config.masterAddress,
-            config.masterPrivateKey
-        ),
-        accountClassHash: config.accountClassHash,
-        rpcProvider: dojoProvider.provider,
-        feeTokenAddress: config.feeTokenAddress,
-    });
-
-    try {
-        await burnerManager.init();
-        if (burnerManager.list().length === 0) {
-            await burnerManager.create();
-        }
-    } catch (e) {
-        console.error(e);
-    }
-
+    await connect();
     return {
         client,
         clientComponents,
@@ -79,7 +57,6 @@ export async function setup({ ...config }: DojoConfig) {
         },
         config,
         dojoProvider,
-        burnerManager,
         toriiClient,
         eventSync,
         torii,

@@ -1,5 +1,5 @@
 import { overridableComponent } from "@dojoengine/recs";
-import type { ContractComponents } from "./typescript/models.gen";
+import type { ContractComponents, SessionDefinition } from "./typescript/models.gen";
 
 export type ClientComponents = ReturnType<typeof createClientComponents>;
 
@@ -10,7 +10,8 @@ export function createClientComponents({
 }) {
     return {
         ...contractComponents,
-        Position: overridableComponent(contractComponents.Position),
-        Moves: overridableComponent(contractComponents.Moves),
+        Session: overridableComponent(contractComponents.Session),
+        Guess: overridableComponent(contractComponents.Guess),
+
     };
 }
