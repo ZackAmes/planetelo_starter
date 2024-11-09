@@ -1,9 +1,9 @@
 {
   "world": {
     "class_hash": "0x139239a99d627697b19b9856beaef7896fc75375caf3d750dd76982a7afeb78",
-    "address": "0x6171ed98331e849d6084bf2b3e3186a7ddf35574dd68cab4691053ee8ab69d7",
-    "seed": "dojo_starter",
-    "name": "Dojo starter",
+    "address": "0x524a1d8fd7859fd30dd063be103b675d8b3b5d130c153ebb68f1122a23a328b",
+    "seed": "game",
+    "name": "Planetelo Starter",
     "abi": [
       {
         "type": "impl",
@@ -1121,8 +1121,8 @@
   },
   "contracts": [
     {
-      "address": "0x20b3efe3ee5116904f4e08ca391715c5bf6703f630b6e91677010e308aebfc1",
-      "class_hash": "0x3a76e1a2e46f31a17ada7d52f1406ad8b877e639384dd91812012a4314c4935",
+      "address": "0xefa802bd265b9e271aab9faab3e41cbec945badcb14120cfdd79659bd682ce",
+      "class_hash": "0x60b2c669a0f6e5a6ccc21948a1765633e5817caaf0d4b745dbc24ac89809764",
       "abi": [
         {
           "type": "impl",
@@ -1167,52 +1167,47 @@
         {
           "type": "impl",
           "name": "ActionsImpl",
-          "interface_name": "dojo_starter::systems::actions::IActions"
-        },
-        {
-          "type": "enum",
-          "name": "dojo_starter::models::Direction",
-          "variants": [
-            {
-              "name": "None",
-              "type": "()"
-            },
-            {
-              "name": "Left",
-              "type": "()"
-            },
-            {
-              "name": "Right",
-              "type": "()"
-            },
-            {
-              "name": "Up",
-              "type": "()"
-            },
-            {
-              "name": "Down",
-              "type": "()"
-            }
-          ]
+          "interface_name": "game::actions::IActions"
         },
         {
           "type": "interface",
-          "name": "dojo_starter::systems::actions::IActions",
+          "name": "game::actions::IActions",
           "items": [
             {
               "type": "function",
-              "name": "spawn",
-              "inputs": [],
-              "outputs": [],
+              "name": "create_session",
+              "inputs": [
+                {
+                  "name": "player1",
+                  "type": "core::starknet::contract_address::ContractAddress"
+                },
+                {
+                  "name": "player2",
+                  "type": "core::starknet::contract_address::ContractAddress"
+                },
+                {
+                  "name": "secret",
+                  "type": "core::integer::u32"
+                }
+              ],
+              "outputs": [
+                {
+                  "type": "core::integer::u32"
+                }
+              ],
               "state_mutability": "external"
             },
             {
               "type": "function",
-              "name": "move",
+              "name": "guess",
               "inputs": [
                 {
-                  "name": "direction",
-                  "type": "dojo_starter::models::Direction"
+                  "name": "session_id",
+                  "type": "core::integer::u32"
+                },
+                {
+                  "name": "value",
+                  "type": "core::integer::u32"
                 }
               ],
               "outputs": [],
@@ -1319,7 +1314,7 @@
         },
         {
           "type": "event",
-          "name": "dojo_starter::systems::actions::actions::Event",
+          "name": "game::actions::actions::Event",
           "kind": "enum",
           "variants": [
             {
@@ -1336,32 +1331,262 @@
         }
       ],
       "init_calldata": [],
-      "tag": "dojo_starter-actions",
+      "tag": "game-actions",
+      "systems": []
+    },
+    {
+      "address": "0x1560775b31f333eca97c536678362d6ea65bb7ea47eef0c7f14f0e190576cd3",
+      "class_hash": "0x1c9ba71844c56cd1c395883d52a276fc0363f095ffb298fd79dba4a37e23aff",
+      "abi": [
+        {
+          "type": "impl",
+          "name": "planetelo__ContractImpl",
+          "interface_name": "dojo::contract::interface::IContract"
+        },
+        {
+          "type": "struct",
+          "name": "core::byte_array::ByteArray",
+          "members": [
+            {
+              "name": "data",
+              "type": "core::array::Array::<core::bytes_31::bytes31>"
+            },
+            {
+              "name": "pending_word",
+              "type": "core::felt252"
+            },
+            {
+              "name": "pending_word_len",
+              "type": "core::integer::u32"
+            }
+          ]
+        },
+        {
+          "type": "interface",
+          "name": "dojo::contract::interface::IContract",
+          "items": [
+            {
+              "type": "function",
+              "name": "dojo_name",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "core::byte_array::ByteArray"
+                }
+              ],
+              "state_mutability": "view"
+            }
+          ]
+        },
+        {
+          "type": "impl",
+          "name": "OneOnOneImpl",
+          "interface_name": "planetelo_interface::interfaces::planetelo::IOneOnOne"
+        },
+        {
+          "type": "enum",
+          "name": "planetelo_interface::interfaces::planetelo::Status",
+          "variants": [
+            {
+              "name": "None",
+              "type": "()"
+            },
+            {
+              "name": "Active",
+              "type": "()"
+            },
+            {
+              "name": "Draw",
+              "type": "()"
+            },
+            {
+              "name": "Winner",
+              "type": "core::starknet::contract_address::ContractAddress"
+            }
+          ]
+        },
+        {
+          "type": "interface",
+          "name": "planetelo_interface::interfaces::planetelo::IOneOnOne",
+          "items": [
+            {
+              "type": "function",
+              "name": "create_match",
+              "inputs": [
+                {
+                  "name": "p1",
+                  "type": "core::starknet::contract_address::ContractAddress"
+                },
+                {
+                  "name": "p2",
+                  "type": "core::starknet::contract_address::ContractAddress"
+                },
+                {
+                  "name": "playlist_id",
+                  "type": "core::integer::u128"
+                }
+              ],
+              "outputs": [
+                {
+                  "type": "core::integer::u128"
+                }
+              ],
+              "state_mutability": "external"
+            },
+            {
+              "type": "function",
+              "name": "settle_match",
+              "inputs": [
+                {
+                  "name": "match_id",
+                  "type": "core::integer::u128"
+                }
+              ],
+              "outputs": [
+                {
+                  "type": "planetelo_interface::interfaces::planetelo::Status"
+                }
+              ],
+              "state_mutability": "external"
+            }
+          ]
+        },
+        {
+          "type": "function",
+          "name": "dojo_init",
+          "inputs": [],
+          "outputs": [],
+          "state_mutability": "view"
+        },
+        {
+          "type": "impl",
+          "name": "WorldProviderImpl",
+          "interface_name": "dojo::contract::components::world_provider::IWorldProvider"
+        },
+        {
+          "type": "struct",
+          "name": "dojo::world::iworld::IWorldDispatcher",
+          "members": [
+            {
+              "name": "contract_address",
+              "type": "core::starknet::contract_address::ContractAddress"
+            }
+          ]
+        },
+        {
+          "type": "interface",
+          "name": "dojo::contract::components::world_provider::IWorldProvider",
+          "items": [
+            {
+              "type": "function",
+              "name": "world_dispatcher",
+              "inputs": [],
+              "outputs": [
+                {
+                  "type": "dojo::world::iworld::IWorldDispatcher"
+                }
+              ],
+              "state_mutability": "view"
+            }
+          ]
+        },
+        {
+          "type": "impl",
+          "name": "UpgradeableImpl",
+          "interface_name": "dojo::contract::components::upgradeable::IUpgradeable"
+        },
+        {
+          "type": "interface",
+          "name": "dojo::contract::components::upgradeable::IUpgradeable",
+          "items": [
+            {
+              "type": "function",
+              "name": "upgrade",
+              "inputs": [
+                {
+                  "name": "new_class_hash",
+                  "type": "core::starknet::class_hash::ClassHash"
+                }
+              ],
+              "outputs": [],
+              "state_mutability": "external"
+            }
+          ]
+        },
+        {
+          "type": "constructor",
+          "name": "constructor",
+          "inputs": []
+        },
+        {
+          "type": "event",
+          "name": "dojo::contract::components::upgradeable::upgradeable_cpt::Upgraded",
+          "kind": "struct",
+          "members": [
+            {
+              "name": "class_hash",
+              "type": "core::starknet::class_hash::ClassHash",
+              "kind": "data"
+            }
+          ]
+        },
+        {
+          "type": "event",
+          "name": "dojo::contract::components::upgradeable::upgradeable_cpt::Event",
+          "kind": "enum",
+          "variants": [
+            {
+              "name": "Upgraded",
+              "type": "dojo::contract::components::upgradeable::upgradeable_cpt::Upgraded",
+              "kind": "nested"
+            }
+          ]
+        },
+        {
+          "type": "event",
+          "name": "dojo::contract::components::world_provider::world_provider_cpt::Event",
+          "kind": "enum",
+          "variants": []
+        },
+        {
+          "type": "event",
+          "name": "game::planetelo::planetelo::Event",
+          "kind": "enum",
+          "variants": [
+            {
+              "name": "UpgradeableEvent",
+              "type": "dojo::contract::components::upgradeable::upgradeable_cpt::Event",
+              "kind": "nested"
+            },
+            {
+              "name": "WorldProviderEvent",
+              "type": "dojo::contract::components::world_provider::world_provider_cpt::Event",
+              "kind": "nested"
+            }
+          ]
+        }
+      ],
+      "init_calldata": [],
+      "tag": "game-planetelo",
       "systems": []
     }
   ],
   "models": [
     {
       "members": [],
-      "class_hash": "0x7ba1920c35f44c82d82d0ff47cbbf04e60226c28027b1a45731aa07bceea9d1",
-      "tag": "DirectionsAvailable"
+      "class_hash": "0x19d0b07dc9f5efdc02a7a8060cf03140f0d4da4603ed287da2dfeb0e16d4306",
+      "tag": "Counter"
     },
     {
       "members": [],
-      "class_hash": "0x469117d9c5cac8ee02e521addae16a36da3571b2d977971395771d4c2db73e0",
-      "tag": "Moves"
+      "class_hash": "0x2602e1690ccfeb84c5e13d6db552fa107cc643789712ee4241bb2dea7310eca",
+      "tag": "Guess"
     },
     {
       "members": [],
-      "class_hash": "0x445a1f5bdb78726083b9b577e775e066f6145f0240162d59f105a1251c2b016",
-      "tag": "Position"
+      "class_hash": "0x61962482ad9a47c3db7510ea6bc8217e86a74e15f564b3ba1a2bb0561227f7d",
+      "tag": "Session"
     }
   ],
-  "events": [
-    {
-      "members": [],
-      "class_hash": "0x5f6b87c8f5260f907795382b962e1f04ab0e98b754b6946eedcee27921819a9",
-      "tag": "Moved"
-    }
-  ]
+  "events": []
 }

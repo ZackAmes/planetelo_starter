@@ -4,10 +4,17 @@ use starknet::ContractAddress;
 //can inlude custom game specific playlists and logic here
 //and create custom logic for managing the playlists
 //see octoguns for an example of how to include custom playlist logic
+#[starknet::interface]
+pub trait IPlanetelo<T> {
+    fn register(self: @T, name: felt252);
+    fn get_name(self: @T) -> felt252;
+}
 
 #[dojo::contract]
 mod planetelo {
     use planetelo_interface::interfaces::planetelo::{IOneOnOne, Status};
+    use planetelo_interface::interfaces::planetary::{PlanetaryInterface, PlanetaryInterfaceTrait, 
+                                                    IPlanetaryActions,IPlanetaryActionsDispatcher};
     use game::actions::{IActions, IActionsDispatcher, IActionsDispatcherTrait};
 
    // use game::lib::dice::{Dice, DiceTrait, DiceImpl};
@@ -17,6 +24,21 @@ mod planetelo {
     use dojo::world::{WorldStorage, WorldStorageTrait};
 
     use dojo::model::{ModelStorage, ModelValueStorage, Model};
+
+    #[abi(embed_v0)]
+    impl PlaneteloImpl of IPlanetelo<ContractState> {
+        fn register(ref self: ContractState) {
+            let caller = get_caller_address();
+
+            let planetary_actions = PlanetaryInterfaceTrait::new().dispatcher();
+            planetary_actions.register('demo', self.address);
+
+        }
+
+        fn get_name(ref self: ContractState) -> felt252 {
+            'demo'
+        }
+    }
 
     #[abi(embed_v0)]
     impl OneOnOneImpl of IOneOnOne<ContractState> {
