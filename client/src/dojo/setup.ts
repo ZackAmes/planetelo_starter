@@ -10,7 +10,9 @@ import type { ArraySignatureType } from "starknet";
 import { BurnerManager } from "@dojoengine/create-burner";
 import { getSyncEntities, getSyncEvents } from "@dojoengine/state";
 import { connect } from "./controller";
-
+import manifest from "./manifest_sepolia.json";
+import { Contract } from "starknet";
+import { type Abi } from "starknet";
 export type SetupResult = Awaited<ReturnType<typeof setup>>;
 
 export async function setup({ ...config }: DojoConfig) {
@@ -31,6 +33,8 @@ export async function setup({ ...config }: DojoConfig) {
     // create dojo provider
     const dojoProvider = new DojoProvider(config.manifest, config.rpcUrl);
 
+    const planetelo = new Contract(manifest.contracts[0].abi, manifest.contracts[0].address).typedv2(manifest.contracts[0].abi as Abi);
+
     const sync = await getSyncEntities(
         toriiClient,
         contractComponents as any,
@@ -48,6 +52,8 @@ export async function setup({ ...config }: DojoConfig) {
     // setup world
     const client = await setupWorld(dojoProvider);
     await connect();
+
+    
     return {
         client,
         clientComponents,
@@ -55,6 +61,7 @@ export async function setup({ ...config }: DojoConfig) {
         publish: (typedData: string, signature: ArraySignatureType) => {
             toriiClient.publishMessage(typedData, signature);
         },
+        planetelo,
         config,
         dojoProvider,
         toriiClient,
