@@ -3,7 +3,7 @@ use dojo::world::{IWorldDispatcher, IWorldDispatcherTrait, Resource};
 use dojo::world::storage::{WorldStorage, WorldStorageTrait};
 
 use planetelo_interface::interfaces::planetary::{
-    PlanetaryStorage, PlanetaryStorageTrait,
+    Planetary, PlanetaryTrait,
     IPlanetaryActionsDispatcher, IPlanetaryActionsDispatcherTrait,
 };
 
@@ -76,9 +76,9 @@ struct OctogunsInterface {
 }
 
 #[generate_trait]
-impl OctogunsInterfaceImpl of OctogunsInterfaceTrait {
+impl OctogunsImpl of OctogunsTrait {
     fn new(contract_address: ContractAddress) -> WorldStorage {
-        OctogunsInterfaceTrait::new(contract_address)
+        OctogunsTrait::new(contract_address)
     }
     fn actions_dispatcher(self: OctogunsInterface) -> IOctogunsActionsDispatcher {
         let (contract_address, _) = self.world.dns(@"actions").unwrap();

@@ -6,15 +6,16 @@ use starknet::ContractAddress;
 //see octoguns for an example of how to include custom playlist logic
 #[starknet::interface]
 pub trait IPlanetelo<T> {
-    fn register(self: @T, name: felt252);
+    fn register(self: @T);
     fn get_name(self: @T) -> felt252;
 }
 
 #[dojo::contract]
 mod planetelo {
+    use super::IPlanetelo;
     use planetelo_interface::interfaces::planetelo::{IOneOnOne, Status};
-    use planetelo_interface::interfaces::planetary::{PlanetaryInterface, PlanetaryInterfaceTrait, 
-                                                    IPlanetaryActions,IPlanetaryActionsDispatcher};
+    use planetelo_interface::interfaces::planetary::{PlanetaryTrait, 
+                                                    IPlanetaryActions,IPlanetaryActionsDispatcher, IPlanetaryActionsDispatcherTrait};
     use game::actions::{IActions, IActionsDispatcher, IActionsDispatcherTrait};
 
    // use game::lib::dice::{Dice, DiceTrait, DiceImpl};
@@ -27,15 +28,17 @@ mod planetelo {
 
     #[abi(embed_v0)]
     impl PlaneteloImpl of IPlanetelo<ContractState> {
-        fn register(ref self: ContractState) {
+        fn register(self: @ContractState) {
             let caller = get_caller_address();
 
-            let planetary_actions = PlanetaryInterfaceTrait::new().dispatcher();
-            planetary_actions.register('demo', self.address);
+            let planetary: WorldStorage = PlanetaryTrait::new();
+            let (contract_address, _) = planetary.dns(@"actions").unwrap();
+            let planetary_actions = IPlanetaryActionsDispatcher {contract_address};
+            planetary_actions.register('demo', self.world(@"demo").dispatcher.contract_address);
 
         }
 
-        fn get_name(ref self: ContractState) -> felt252 {
+        fn get_name(self: @ContractState) -> felt252 {
             'demo'
         }
     }

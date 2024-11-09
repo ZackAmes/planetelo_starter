@@ -8,38 +8,20 @@ trait IPlanetaryActions<TState> {
     fn get_world_address(ref self: TState, name: felt252) -> ContractAddress;
 }
 
-struct PlanetaryStorage {
+struct Planetary {
     world: WorldStorage
 }
 
 #[generate_trait]
-impl PlanetaryStorageImpl of PlanetaryStorageTrait {
-    fn new(world_address: ContractAddress) -> WorldStorage {
-        (WorldStorageTrait::new(IWorldDispatcher {contract_address: world_address}, @"planetary"))
-    }
-}
-
-#[generate_trait]
-impl PlanetaryInterfaceImpl of PlanetaryInterfaceTrait {
-
-    const ACTIONS_SELECTOR: felt252 = selector_from_tag!("planetary-planetary_actions");
-
-
+impl PlanetaryImpl of PlanetaryTrait {
     fn WORLD_CONTRACT() -> ContractAddress {
         (starknet::contract_address_const::<0x12e4037b9904e439251127d689aed16e4494c3e82a12982ed3183d7bf29350b>())
     }
-    //
-    // create a new interface
     fn new() -> WorldStorage {
-        (PlanetaryStorageTrait::new(Self::WORLD_CONTRACT()))
-    }
-    fn new_custom(world_address: ContractAddress) -> WorldStorage {
-        (PlanetaryStorageTrait::new(world_address))
+        (WorldStorageTrait::new(IWorldDispatcher {contract_address: Self::WORLD_CONTRACT()}, @"planetary"))
     }
 
-    //
-    // dispatchers
-    fn dispatcher(self: PlanetaryStorage) -> IPlanetaryActionsDispatcher {
+    fn dispatcher(self: Planetary) -> IPlanetaryActionsDispatcher {
         let (contract_address, _) = self.world.dns(@"planetary_actions").unwrap();
         (IPlanetaryActionsDispatcher{contract_address})
     }

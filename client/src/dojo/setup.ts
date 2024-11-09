@@ -16,7 +16,8 @@ import { type Abi } from "starknet";
 export type SetupResult = Awaited<ReturnType<typeof setup>>;
 
 export async function setup({ ...config }: DojoConfig) {
-    // torii client
+    // torii clientc
+    console.log(config);
     const toriiClient = await torii.createClient({
         rpcUrl: config.rpcUrl,
         toriiUrl: config.toriiUrl,
@@ -31,6 +32,7 @@ export async function setup({ ...config }: DojoConfig) {
     const clientComponents = createClientComponents({ contractComponents });
 
     // create dojo provider
+    console.log(config.rpcUrl);
     const dojoProvider = new DojoProvider(config.manifest, config.rpcUrl);
 
     const planetelo = new Contract(manifest.contracts[0].abi, manifest.contracts[0].address).typedv2(manifest.contracts[0].abi as Abi);
