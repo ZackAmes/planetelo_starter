@@ -21,7 +21,7 @@ mod planetelo {
     use game::dice::{Dice, DiceTrait, DiceImpl};
     use game::models::{Session, Guess};
 
-    use starknet::{ContractAddress, get_caller_address};
+    use starknet::{ContractAddress, get_caller_address, get_block_timestamp};
     use dojo::world::{WorldStorage, WorldStorageTrait};
 
     use dojo::model::{ModelStorage, ModelValueStorage, Model};
@@ -60,7 +60,7 @@ mod planetelo {
             let mut game = self.world(@"game");
             let (contract_address, _) = game.dns(@"actions").unwrap();
             let dispatcher = IActionsDispatcher {contract_address};
-            let mut dice = DiceTrait::new(100, 'SEED');
+            let mut dice = DiceTrait::new(100, get_block_timestamp().into());
 
             let secret = dice.roll();
             let id: u128 = dispatcher.create_session(p1, p2, secret).into();

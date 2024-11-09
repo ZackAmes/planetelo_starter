@@ -34,6 +34,7 @@
             winner = parseInt(await actions.get_game_winner(game_id));
             console.log(winner)
             console.log(status)
+            secret = parseInt(await actions.get_secret(game_id));
         }
     }
 
@@ -75,17 +76,6 @@
         console.log(res);
     }
 
-    async function handleGuess() {
-        console.log(planetelo.address);
-        let res = await $account?.execute(
-            [{
-                contractAddress: actions.address,
-                entrypoint: 'guess',
-                calldata: [game_id!, guessValue]
-            }]
-        );
-        console.log(res);
-    }
 
     $: buttonText = status === 0 ? 'Queue' 
                   : status === 1 ? 'Matchmake' 
@@ -101,6 +91,17 @@
         } else {
             connect();
         }
+    }
+
+    async function handleGuess(value: number) {
+        let res = await $account?.execute(
+            [{
+                contractAddress: actions.address,
+                entrypoint: 'guess',
+                calldata: [game_id!, value]
+            }]
+        );
+        console.log(res);
     }
 
     async function handleSettle() {
@@ -137,7 +138,7 @@
                 <p>ELO: {elo}</p>
                 <p>Players in Queue: {queue_length}</p>
                 {#if secret != 0}
-                    <p class="secret">{secret}</p>
+                    <p class="secret" style="color: #333333;">{secret}</p>
                 {/if}
             </div>
             {#if status === 2}
@@ -153,12 +154,19 @@
                     </div>
                 {:else}
                     <div class="guess-container">
-                        <button 
-                            class="queue-button playing" 
-                            on:click={handleSettle}
-                        >
-                            Settle
-                        </button>
+                            <input 
+                                type="number" 
+                                bind:value={guessValue}
+                                min="0"
+                                max="100"
+                                class="guess-input"
+                            />
+                            <button 
+                                class="queue-button playing" 
+                                on:click={() => handleGuess(guessValue)}
+                            >
+                                Guess
+                            </button>
                     </div>
                 {/if}
             {:else}
@@ -295,7 +303,7 @@
     }
 
     .secret {
-        color: transparent;
+        color: #f0f0f0;
         user-select: none;
         pointer-events: none;
     }
