@@ -138,7 +138,7 @@
                 <p>ELO: {elo}</p>
                 <p>Players in Queue: {queue_length}</p>
                 {#if secret != 0}
-                    <p class="secret" style="color: #333333;">{secret}</p>
+                    <p class="secret" style="color: #444444;">{secret}</p>
                 {/if}
             </div>
             {#if status === 2}
