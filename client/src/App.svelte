@@ -20,6 +20,7 @@
     let game_id: number | null = null;
     let guessValue: number = 0;
     let secret: number = 0;
+    let winner: number = 0;
 
     $: ({ clientComponents, torii, client, planetelo, actions, dojoProvider } = $dojoStore);
 
@@ -27,20 +28,13 @@
     let get_status = async () => {
         status = parseInt(await planetelo.get_status($account!.address, "0x64656d6f", "0x50"));
         elo = await planetelo.get_elo($account!.address, "0x64656d6f", "0x50");
-        queue_length = await planetelo.get_queue_length("0x64656d6f", "0x50");
-        if (game_id) {
-            secret = parseInt(await actions.get_secret(game_id!));
-            console.log(secret)
-        }
-        console.log(status)
+        queue_length = parseInt(await planetelo.get_queue_length("0x64656d6f", "0x50"));
         if (status == 2) {
             game_id = parseInt(await planetelo.get_player_game_id($account!.address, "0x64656d6f", "0x50"));
-            console.log(game_id)
-
-        let winner = await actions.get_game_winner(game_id);
-        console.log(winner)
+            winner = parseInt(await actions.get_game_winner(game_id));
+            console.log(winner)
+            console.log(status)
         }
-
     }
 
     onMount(() => {
@@ -93,10 +87,6 @@
         console.log(res);
     }
 
-    async function handlePlay() {
-        console.log("Play");
-    }
-
     $: buttonText = status === 0 ? 'Queue' 
                   : status === 1 ? 'Matchmake' 
                   : 'Play';
@@ -111,6 +101,17 @@
         } else {
             connect();
         }
+    }
+
+    async function handleSettle() {
+        let res = await $account?.execute(
+            [{
+                contractAddress: planetelo.address,
+                entrypoint: 'settle',
+                calldata: ["0x64656d6f", game_id!]
+            }]
+        );
+        console.log(res);
     }
 </script>
 
@@ -129,23 +130,31 @@
             <div class="stats">
                 <p>ELO: {elo}</p>
                 <p>Players in Queue: {queue_length}</p>
+                {#if secret != 0}
+                    <p class="secret">{secret}</p>
+                {/if}
             </div>
             {#if status === 2}
-                <div class="guess-container">
-                    <input 
-                        type="number" 
-                        bind:value={guessValue}
-                        min="0"
-                        max="100"
-                        class="guess-input"
-                    />
-                    <button 
-                        class="queue-button playing" 
-                        on:click={handleGuess}
-                    >
-                        Guess
-                    </button>
-                </div>
+                {#if winner !== 0}
+                    <div class="winner-container">
+                        <p class="winner-text">Player {winner} Won!</p>
+                        <button 
+                            class="queue-button settle" 
+                            on:click={handleSettle}
+                        >
+                            Settle
+                        </button>
+                    </div>
+                {:else}
+                    <div class="guess-container">
+                        <button 
+                            class="queue-button playing" 
+                            on:click={handleSettle}
+                        >
+                            Settle
+                        </button>
+                    </div>
+                {/if}
             {:else}
                 <button 
                     class="queue-button {buttonClass}" 
@@ -199,8 +208,9 @@
     }
 
     .status {
-        font-size: 1.2rem;
-        color: #666;
+        font-size: 1.4rem;
+        color: #FF4081;
+        font-weight: bold;
     }
 
     .queue-button.playing {
@@ -217,9 +227,10 @@
     }
 
     .stats p {
-        font-size: 1.2rem;
+        font-size: 1.4rem;
         margin: 0.5rem 0;
-        color: #333;
+        color: #1E88E5;
+        font-weight: bold;
     }
 
     .connection-button {
@@ -252,5 +263,34 @@
         border: 2px solid #2196F3;
         border-radius: 0.5rem;
         outline: none;
+    }
+
+    .winner-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .winner-text {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #FF4081;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        margin: 0;
+    }
+
+    .queue-button.settle {
+        background-color: #9C27B0;
+    }
+
+    .queue-button.settle:hover {
+        background-color: #7B1FA2;
+    }
+
+    .secret {
+        color: transparent;
+        user-select: none;
+        pointer-events: none;
     }
 </style>

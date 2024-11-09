@@ -69,7 +69,7 @@ mod planetelo {
         }
 
         fn settle_match(ref self: ContractState, match_id: u128) -> Status {
-            let mut world = self.world(@"planetelo");
+            let mut world = self.world(@"game");
             let session: Session = world.read_model(match_id);
 
             if session.winner == 0 {

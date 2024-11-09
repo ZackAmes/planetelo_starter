@@ -18,7 +18,6 @@ async function initApp() {
 
     // @ts-ignore
     let player_status = await planetelo.get_status(get(account)!.address, 'demo'.toString(16), '0x50');
-    console.log(player_status);
 
     const app = new App({
         target: document.getElementById("app")!,
