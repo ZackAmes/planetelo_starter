@@ -12,12 +12,14 @@
     $: ({ clientComponents, torii, client, planetelo } = $dojoStore);
 
     async function handleQueue() {
+        console.log(planetelo.address)
+
         let res = await $account?.execute(
-            {
+            [{
                 contractAddress: planetelo.address,
                 entrypoint: 'queue',
-                calldata: ['demo'.toString(16), '0x50']
-            }
+                calldata: ["0x64656d6f", "0x50"]
+            }]
         );
         console.log(res);
     }

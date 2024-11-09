@@ -6,7 +6,7 @@ use starknet::ContractAddress;
 //see octoguns for an example of how to include custom playlist logic
 #[starknet::interface]
 pub trait IPlanetelo<T> {
-    fn register(self: @T);
+    fn register(ref self: T);
     fn get_name(self: @T) -> felt252;
 }
 
@@ -28,11 +28,11 @@ mod planetelo {
 
     #[abi(embed_v0)]
     impl PlaneteloImpl of IPlanetelo<ContractState> {
-        fn register(self: @ContractState) {
+        fn register(ref self: ContractState) {
             let caller = get_caller_address();
 
             let planetary: WorldStorage = PlanetaryTrait::new();
-            let (contract_address, _) = planetary.dns(@"actions").unwrap();
+            let (contract_address, _) = planetary.dns(@"planetary_actions").unwrap();
             let planetary_actions = IPlanetaryActionsDispatcher {contract_address};
             planetary_actions.register('demo', self.world(@"demo").dispatcher.contract_address);
 

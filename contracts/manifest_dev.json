@@ -1336,7 +1336,7 @@
     },
     {
       "address": "0x1560775b31f333eca97c536678362d6ea65bb7ea47eef0c7f14f0e190576cd3",
-      "class_hash": "0x597b58c56f78be86e7b394e3587021deeff6bd20fdca588016d1b7ad707f712",
+      "class_hash": "0x5325a323b4743914ca52e80aa36ba91e537c3ba8bfefe45ff05ac5c909c7bf1",
       "abi": [
         {
           "type": "impl",
@@ -1392,7 +1392,7 @@
               "name": "register",
               "inputs": [],
               "outputs": [],
-              "state_mutability": "view"
+              "state_mutability": "external"
             },
             {
               "type": "function",

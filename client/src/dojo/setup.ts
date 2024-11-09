@@ -17,7 +17,7 @@ export type SetupResult = Awaited<ReturnType<typeof setup>>;
 
 export async function setup({ ...config }: DojoConfig) {
     // torii clientc
-    console.log(config);
+    console.log(config.manifest.contracts);
     const toriiClient = await torii.createClient({
         rpcUrl: config.rpcUrl,
         toriiUrl: config.toriiUrl,
@@ -35,8 +35,10 @@ export async function setup({ ...config }: DojoConfig) {
     console.log(config.rpcUrl);
     const dojoProvider = new DojoProvider(config.manifest, config.rpcUrl);
 
-    const planetelo = new Contract(manifest.contracts[0].abi, manifest.contracts[0].address).typedv2(manifest.contracts[0].abi as Abi);
-
+    const planetelo = new Contract(manifest.contracts[0].abi, manifest.contracts[0].address, dojoProvider.provider).typedv2(manifest.contracts[0].abi as Abi);
+    const actions = new Contract(config.manifest.contracts[1].abi, config.manifest.contracts[1].address, dojoProvider.provider).typedv2(config.manifest.contracts[1].abi as Abi);
+    console.log(actions);
+    console.log((await actions.get_name()).toString(16));
     const sync = await getSyncEntities(
         toriiClient,
         contractComponents as any,
