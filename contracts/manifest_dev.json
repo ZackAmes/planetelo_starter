@@ -1,9 +1,32 @@
 {
   "world": {
-    "class_hash": "0x139239a99d627697b19b9856beaef7896fc75375caf3d750dd76982a7afeb78",
-    "address": "0x524a1d8fd7859fd30dd063be103b675d8b3b5d130c153ebb68f1122a23a328b",
+    "class_hash": "0x79d9ce84b97bcc2a631996c3100d57966fc2f5b061fb1ec4dfd0040976bcac6",
+    "address": "0x77e7a688b906db9e61f7dac888dc5530ed8bd002d42b751e2a23fc871e971d2",
     "seed": "game",
     "name": "Planetelo Starter",
+    "entrypoints": [
+      "uuid",
+      "set_metadata",
+      "register_namespace",
+      "register_event",
+      "register_model",
+      "register_contract",
+      "init_contract",
+      "upgrade_event",
+      "upgrade_model",
+      "upgrade_contract",
+      "emit_event",
+      "emit_events",
+      "set_entity",
+      "set_entities",
+      "delete_entity",
+      "delete_entities",
+      "grant_owner",
+      "revoke_owner",
+      "grant_writer",
+      "revoke_writer",
+      "upgrade"
+    ],
     "abi": [
       {
         "type": "impl",
@@ -83,16 +106,12 @@
         ]
       },
       {
-        "type": "enum",
-        "name": "core::bool",
-        "variants": [
+        "type": "struct",
+        "name": "core::array::Span::<core::array::Span::<core::felt252>>",
+        "members": [
           {
-            "name": "False",
-            "type": "()"
-          },
-          {
-            "name": "True",
-            "type": "()"
+            "name": "snapshot",
+            "type": "@core::array::Array::<core::array::Span::<core::felt252>>"
           }
         ]
       },
@@ -185,6 +204,30 @@
           {
             "name": "Enum",
             "type": "core::array::Span::<dojo::meta::layout::FieldLayout>"
+          }
+        ]
+      },
+      {
+        "type": "struct",
+        "name": "core::array::Span::<dojo::model::definition::ModelIndex>",
+        "members": [
+          {
+            "name": "snapshot",
+            "type": "@core::array::Array::<dojo::model::definition::ModelIndex>"
+          }
+        ]
+      },
+      {
+        "type": "enum",
+        "name": "core::bool",
+        "variants": [
+          {
+            "name": "False",
+            "type": "()"
+          },
+          {
+            "name": "True",
+            "type": "()"
           }
         ]
       },
@@ -398,10 +441,26 @@
               {
                 "name": "values",
                 "type": "core::array::Span::<core::felt252>"
+              }
+            ],
+            "outputs": [],
+            "state_mutability": "external"
+          },
+          {
+            "type": "function",
+            "name": "emit_events",
+            "inputs": [
+              {
+                "name": "event_selector",
+                "type": "core::felt252"
               },
               {
-                "name": "historical",
-                "type": "core::bool"
+                "name": "keys",
+                "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+              },
+              {
+                "name": "values",
+                "type": "core::array::Span::<core::array::Span::<core::felt252>>"
               }
             ],
             "outputs": [],
@@ -433,6 +492,30 @@
           },
           {
             "type": "function",
+            "name": "entities",
+            "inputs": [
+              {
+                "name": "model_selector",
+                "type": "core::felt252"
+              },
+              {
+                "name": "indexes",
+                "type": "core::array::Span::<dojo::model::definition::ModelIndex>"
+              },
+              {
+                "name": "layout",
+                "type": "dojo::meta::layout::Layout"
+              }
+            ],
+            "outputs": [
+              {
+                "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+              }
+            ],
+            "state_mutability": "view"
+          },
+          {
+            "type": "function",
             "name": "set_entity",
             "inputs": [
               {
@@ -457,6 +540,30 @@
           },
           {
             "type": "function",
+            "name": "set_entities",
+            "inputs": [
+              {
+                "name": "model_selector",
+                "type": "core::felt252"
+              },
+              {
+                "name": "indexes",
+                "type": "core::array::Span::<dojo::model::definition::ModelIndex>"
+              },
+              {
+                "name": "values",
+                "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+              },
+              {
+                "name": "layout",
+                "type": "dojo::meta::layout::Layout"
+              }
+            ],
+            "outputs": [],
+            "state_mutability": "external"
+          },
+          {
+            "type": "function",
             "name": "delete_entity",
             "inputs": [
               {
@@ -466,6 +573,26 @@
               {
                 "name": "index",
                 "type": "dojo::model::definition::ModelIndex"
+              },
+              {
+                "name": "layout",
+                "type": "dojo::meta::layout::Layout"
+              }
+            ],
+            "outputs": [],
+            "state_mutability": "external"
+          },
+          {
+            "type": "function",
+            "name": "delete_entities",
+            "inputs": [
+              {
+                "name": "model_selector",
+                "type": "core::felt252"
+              },
+              {
+                "name": "indexes",
+                "type": "core::array::Span::<dojo::model::definition::ModelIndex>"
               },
               {
                 "name": "layout",
@@ -850,11 +977,6 @@
             "kind": "key"
           },
           {
-            "name": "historical",
-            "type": "core::bool",
-            "kind": "key"
-          },
-          {
             "name": "keys",
             "type": "core::array::Span::<core::felt252>",
             "kind": "data"
@@ -1121,13 +1243,23 @@
   },
   "contracts": [
     {
-      "address": "0xefa802bd265b9e271aab9faab3e41cbec945badcb14120cfdd79659bd682ce",
-      "class_hash": "0x25e4585d53911baec2bb6413e3bd1712a980eb13d5de9afc66ff42d670e3ad",
+      "address": "0x3de1fae0c2a57d87794bc2da95a7fda4f33b7314aa2c045cabce591f4762c80",
+      "class_hash": "0x456e84bf15cd7e9dc99e588fa1079673086dfa35c4595ee9185e87620860a0f",
       "abi": [
         {
           "type": "impl",
           "name": "actions__ContractImpl",
           "interface_name": "dojo::contract::interface::IContract"
+        },
+        {
+          "type": "interface",
+          "name": "dojo::contract::interface::IContract",
+          "items": []
+        },
+        {
+          "type": "impl",
+          "name": "actions__DeployedContractImpl",
+          "interface_name": "dojo::meta::interface::IDeployedResource"
         },
         {
           "type": "struct",
@@ -1149,7 +1281,7 @@
         },
         {
           "type": "interface",
-          "name": "dojo::contract::interface::IContract",
+          "name": "dojo::meta::interface::IDeployedResource",
           "items": [
             {
               "type": "function",
@@ -1364,16 +1496,31 @@
       ],
       "init_calldata": [],
       "tag": "game-actions",
-      "systems": []
+      "selector": "0x6699bf586827bdec0b60982778c9af7e0ba385ea161c9c18832e74150d7a897",
+      "systems": [
+        "create_session",
+        "guess",
+        "upgrade"
+      ]
     },
     {
-      "address": "0x653efb7d32cdcaf65ed4a6fd89378dd4e21bd60f6c2bb9fe455e1e8db6b6650",
-      "class_hash": "0x5f89f900f18b3a5c9ee9192b2d0ac3f33c66844f823cf05fb4b96a79e13f291",
+      "address": "0x5ab0e34c7ad0fc562a665d4b90e8d68e29d6cf41ebe049b2ee156e96e88bb1b",
+      "class_hash": "0x23e15f5fa472f743c77442bc71f3235244bb79c6c573818b2deb014be9d499c",
       "abi": [
         {
           "type": "impl",
           "name": "planetelo__ContractImpl",
           "interface_name": "dojo::contract::interface::IContract"
+        },
+        {
+          "type": "interface",
+          "name": "dojo::contract::interface::IContract",
+          "items": []
+        },
+        {
+          "type": "impl",
+          "name": "planetelo__DeployedContractImpl",
+          "interface_name": "dojo::meta::interface::IDeployedResource"
         },
         {
           "type": "struct",
@@ -1395,7 +1542,7 @@
         },
         {
           "type": "interface",
-          "name": "dojo::contract::interface::IContract",
+          "name": "dojo::meta::interface::IDeployedResource",
           "items": [
             {
               "type": "function",
@@ -1629,24 +1776,33 @@
       ],
       "init_calldata": [],
       "tag": "planetelo-planetelo",
-      "systems": []
+      "selector": "0x25ac4129b8141e0edb259913ad6700dac2b338bda1ff616e6ae5eaa207c11f1",
+      "systems": [
+        "register",
+        "create_match",
+        "settle_match",
+        "upgrade"
+      ]
     }
   ],
   "models": [
     {
       "members": [],
-      "class_hash": "0x19d0b07dc9f5efdc02a7a8060cf03140f0d4da4603ed287da2dfeb0e16d4306",
-      "tag": "Counter"
+      "class_hash": "0x4289c472406c5df1ddaacdd2ec762beaef2ca7e5fb4449f038ea9cddc0ab91d",
+      "tag": "game-Counter",
+      "selector": "0x5c95cd3bb495eb8e977acfef9647a55f625ef4fce30ac1dabb371d19097a25"
     },
     {
       "members": [],
-      "class_hash": "0x2602e1690ccfeb84c5e13d6db552fa107cc643789712ee4241bb2dea7310eca",
-      "tag": "Guess"
+      "class_hash": "0x43cdc6ef3a7f00e9ed1651ebcf3b589812b2277c250df019df9ad61a6b301b1",
+      "tag": "game-Guess",
+      "selector": "0x5f023f331ed6e6ef68fa86477a00ad8f95c7146709e6ef4b611f83f15910159"
     },
     {
       "members": [],
-      "class_hash": "0x61962482ad9a47c3db7510ea6bc8217e86a74e15f564b3ba1a2bb0561227f7d",
-      "tag": "Session"
+      "class_hash": "0x5a5182ae9809e8dea337eb50f914e4f945cb3b75d01cb72179ff39a9cbace15",
+      "tag": "game-Session",
+      "selector": "0x572dca49624a8d61d40c6db24608a71d7379c33214b90175a5d901aef4bd038"
     }
   ],
   "events": []

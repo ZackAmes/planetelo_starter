@@ -40,6 +40,7 @@ export async function setup({ ...config }: DojoConfig) {
     const planetelo = new Contract(manifest.contracts[0].abi, manifest.contracts[0].address, dojoProvider.provider).typedv2(manifest.contracts[0].abi as Abi);
     const actions = new Contract(actions_abi.abi, actions_abi.address, dojoProvider.provider).typedv2(actions_abi.abi as Abi);
     
+    console.log(planetelo)
     console.log(actions)
     const sync = await getSyncEntities(
         toriiClient,

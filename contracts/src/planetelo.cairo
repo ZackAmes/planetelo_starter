@@ -30,7 +30,7 @@ mod planetelo {
         let planetary: WorldStorage = PlanetaryTrait::new();
         let (contract_address, _) = planetary.dns(@"planetary_actions").unwrap();
         let planetary_actions = IPlanetaryActionsDispatcher {contract_address};
-        planetary_actions.register('demo', self.world(@"demo").dispatcher.contract_address);
+        planetary_actions.register('ph', self.world(@"demo").dispatcher.contract_address);
     }
 
     #[abi(embed_v0)]

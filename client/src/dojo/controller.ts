@@ -4,8 +4,8 @@ import { account, username, dojoStore} from "../stores";
 import manifest from "../../../contracts/manifest_dev.json";
 import { get } from "svelte/store";
 
-let contract_address = manifest.contracts[0].address;
-export const planeteloContract = "0x52e3d09dd643e4d4f491b3d022d3c67f48c0bf2ceda8e7b3fc83f45d06711bd"
+let contract_address = "0x3de1fae0c2a57d87794bc2da95a7fda4f33b7314aa2c045cabce591f4762c80";
+export const planeteloContract = "0x7a9e8de4cf849402d115efdae32b892235dddbf29e15dcde2222fbcd928a30c"
 
 //let contract_address = "0x049d36570d4e46f48e99674bd3fcc8463d4990949b4c6bb434ee877b1830a794"
 export const controller = new Controller({

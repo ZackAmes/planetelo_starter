@@ -7,11 +7,11 @@ version = "0.1.0"
 sierra-replace-ids = true
 
 [dependencies]
-dojo = { git = "https://github.com/dojoengine/dojo", tag = "v1.0.0-rc.1" }
+dojo = { git = "https://github.com/dojoengine/dojo", tag = "v1.0.0" }
 planetelo_interface = { path = "../planetelo_interface" }
 
 [[target.starknet-contract]]
 build-external-contracts = ["dojo::world::world_contract::world"]
 
 [dev-dependencies]
-dojo_cairo_test = { git = "https://github.com/dojoengine/dojo", tag = "v1.0.0-rc.1" }
+dojo_cairo_test = { git = "https://github.com/dojoengine/dojo", tag = "v1.0.0" }
