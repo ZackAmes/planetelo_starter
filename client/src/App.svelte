@@ -129,7 +129,7 @@
                 [{
                     contractAddress: planetelo.address,
                     entrypoint: 'settle',
-                    calldata: ["0x64656d6f", game_id!]
+                    calldata: ["0x7068", game_id!]
                 }]
             );
             console.log(res);
